@@ -15,7 +15,7 @@ use App\Mail\OgsMailable;
 
 Route::get('/mail', function () {
     // send an email
-    Mail::to('shahzaib.imran94@gmail.com')->queue(new OgsMailable);
+    Mail::to('shahzaib407150@hotmail.co.uk')->queue(new OgsMailable);
     return redirect()->route('product.index');
 });
 
