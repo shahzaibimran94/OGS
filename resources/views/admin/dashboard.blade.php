@@ -111,3 +111,11 @@
 		@endif
 
 @endsection
+
+@section('scripts')
+<script type="text/javascript">
+	function markNotificationAsRead(){
+		$.get('/ogs/read');
+	}
+</script>
+@endsection

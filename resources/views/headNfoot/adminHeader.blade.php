@@ -8,9 +8,20 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#">Online<span>Grocery</span>Store</a>
-				<ul class="user-menu">
-					<li class="dropdown pull-right">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+				<ul class="user-menu" style="display: -webkit-box !important;">
+					<li class="dropdown" onclick="markNotificationAsRead()">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						<span class="glyphicon glyphicon-globe"></span>Notifications<span class="badge">{{Session::has('user') ? count(Session::get('user')->unreadNotifications) : '0'}}</span></a>
+						<ul class="dropdown-menu" role="menu">
+							@forelse (Session::get('user')->unreadNotifications as $notification)
+							    <li>{{ $notification->type }}</li>
+							@empty
+							    <li>No Unread Notifications</li>
+							@endforelse
+						</ul>
+					</li> 
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin:5%; ">
 						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Jason_Momoa_Supercon_2014.jpg/170px-Jason_Momoa_Supercon_2014.jpg" class="img-rounded" alt="Cinque Terre" width="30" height="30"> {{ Session::has('user') ? Session::get('user')->name : 'Error' }} <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="#"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Profile</a></li>

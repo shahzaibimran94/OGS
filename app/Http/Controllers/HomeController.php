@@ -38,6 +38,12 @@ class HomeController extends Controller
         $order_id = $request->session()->get('orderid');
         $count = Order::where('order_id',$order_id)->sum('quantity');
         $request->session()->put('cart',$count);
+        $order = Order::where('order_id',$order_id)->get();
+        if($order == '[]'){
+        
+        }else{
+            Session::put('cartDetails',$order);
+        }
 
         return redirect()->route('product.index');
     }
@@ -52,5 +58,34 @@ class HomeController extends Controller
         }else{
             return view('cart-view',compact('order'));
         }
+    }
+
+    public function cartBox(Request $r) {
+        
+        $orderid = $r->session()->get('orderid');
+        $order = Order::with(['product'])->where('order_id',$orderid)->get();
+        $data = array();
+        for ($i=0;$i<sizeof($order);$i++) {
+          $data['name'] = $order[$i]->product->name;
+          $data['image'] = $order[$i]->product->image;
+          $data['price'] = $order[$i]->product->price;
+        }
+        /*$ids = array();
+        foreach($order as $o){
+            array_push($ids,$o->product_id);
+        }
+        $product = Product::whereIn('id',$ids)->get();*/
+        $cartData = "<table style='border: 1px solid black;'>";
+        foreach ($order as $o) {
+            $cartData .= "<tbody><tr><td> Quantity </td><td> $o->quantity </td></tr></tbody>";
+        }
+        $cartData .= "</table>";
+        echo $cartData;
+        dd($order);
+        /*if($order == '[]'){
+            return 'null';
+        }else{
+            return $order;
+        }*/   
     }
 }

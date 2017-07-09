@@ -23,6 +23,13 @@
 	</style>
 </head>
 <body style="background-color: whitesmoke;">
+	@if(Session::has('passUpdated'))
+	<center>
+	<div class="bg-success" style="width:50%;">
+		<h1>{{Session::get('passUpdated')}}</h1>
+	</div>
+	</center>
+	@endif
 	<div class="panel panel-default" style="width: 30%;background: white;margin: auto;border-radius: 2%;margin-top: 2%;">
 		<br>
 		<center>
@@ -45,18 +52,52 @@
 							</div>
 							<div class="checkbox">
 								<label style="color: #46c266;">
-									<input name="remember" type="checkbox" value="Remember Me">Remember Me
+									<a id="reset">Forgot Password</a>
 								</label>
 							</div>
 							<input type="submit" name="Login" value="Login" class="btn btn-primary">
 					</fieldset>
 				</form>
+				<div class="resetBox">
+					<br>
+					<center><h3>Reset Your Password</h3></center>
+					<form method="POST" action="{{ route('paswrd.reset')}}">
+						{{ csrf_field() }}
+						<input class="form-control" placeholder="Email" name="email" type="email" required>
+						<input type="Submit" name="Submit">
+					</form>
+				</div>
+				@if(Session::has('ee'))
+					@if(Session::get('ee') == 'Email not Exist')
+						<p>Email not Exist</p>	
+					@endif
+					@if(Session::get('ee') == 'true')
+					<div>
+					<br>
+					<center><h3>Enter new Password</h3></center>
+					<form method="POST" action="{{ route('reset')}}">
+						{{ csrf_field() }}
+						<input type="hidden" name="email" value='{{Session::get("email")}}'>
+						<input class="form-control" placeholder="********" name="password" type="password" required>
+						<input type="Submit" name="Submit">
+					</form>
+					</div>
+					@endif
+				@endif
 			</div>
 		</center>
 	</div>
 	
 	<script type="text/javascript" src="public/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="public/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+        	$(".resetBox").css("display", "none");
+		});
+		$('#reset').on("click", function(){
+			$(".resetBox").css("display", "block");
+		});
+	</script>
 </body>
 </html>	
 	

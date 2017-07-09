@@ -71,4 +71,10 @@ footer{
 	.glyphicon-shopping-cart{
 		position: inherit;
   	}
+  	.cart-box{
+  		margin-top: -10% !important;
+  		margin-right: -4% !important;
+  		min-width: 92% !important;
+  		min-height: 14% !important;
+  	}
 }

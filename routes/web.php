@@ -12,12 +12,30 @@
 */
 
 use App\Mail\OgsMailable;
+use App\User;
+use App\Notifications\RepliedToThread;
 
 Route::get('/mail', function () {
     // send an email
     Mail::to('shahzaib407150@hotmail.co.uk')->queue(new OgsMailable);
     return redirect()->route('product.index');
 });
+
+Route::get('/not', function() {
+	if(Session::has('user')){
+	$user = User::find(Session::get('user')->id);
+	$user->notify(new RepliedToThread());
+	}else{
+		echo 'fail';
+	}
+});
+Route::get('/read', function() {
+	Session::get('user')->unreadNotifications->markAsRead();
+	//return redirect()->route('product.index');
+});
+//facebook api
+Route::get('/redirect', 'SocialController@redirect');
+Route::get('/callback', 'SocialController@callback');
 
 Route::get('/admin', [
 	'uses' => 'LoginController@index',
@@ -32,6 +50,16 @@ Route::post('/login', [
 Route::get('/logout', [
 	'uses' => 'LoginController@logout',
 	'as' => 'logout'
+]);
+
+Route::post('/reset', [
+	'uses' => 'LoginController@reset',
+	'as' => 'paswrd.reset'
+]);
+
+Route::post('/resetPass', [
+	'uses' => 'LoginController@newPass',
+	'as' => 'reset'
 ]);
 //Route::get('/reg', 'LoginController@register');
 Route::get('/dashboard', [
@@ -66,14 +94,16 @@ Route::post('/update', [
 	'uses' => 'ProductController@update'
 ]);
 
-Route::get('/', [
-	'uses' =>'HomeController@index',
-	'as' => 'product.index'
-]);
+Route::name('product.index')->get('/','HomeController@index');
 
 Route::get('/add-to-cart/{id}' , [
 	'uses' => 'HomeController@getAddToCart',
 	'as' => 'product.addtocart'
+]);
+
+Route::get('/cart-box' , [
+	'uses' => 'HomeController@cartBox',
+	'as' => 'cart.box'
 ]);
 
 Route::get('/view-cart' , [

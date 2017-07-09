@@ -48,13 +48,13 @@ class LoginController extends Controller
 
     public function register() {
     	$password = Hash::make('malik1994');
-    	$username = 'shahzaib94';
-    	$data = array('name' => 'Shahzaib',
-    				  'email' => 'shahzaib.imran94@gmail.com' ,
+    	$username = 'osama94';
+    	$data = array('name' => 'Osama',
+    				  'email' => 'shahzaib407150@hotmail.co.uk' ,
     				  'username' => $username ,
     				  'password' => $password 
     				  );
-    	$find = User::where('username',$username)->get()->first();
+    	$find = User::where('username',$username)->first();
     	if($find) {
     		echo 'User Already Exists';
     	}else{
@@ -68,8 +68,38 @@ class LoginController extends Controller
     }
 
     public function logout(Request $r) {
-    	
     	$r->session()->flush('user');
     	return redirect()->route('index');
+    }
+
+    public function reset(Request $r){
+        $email = $r->input('email');
+        $data = User::where('email',$email)->get()->first();
+        if($data){
+            Session::put('ee','true');
+            Session::put('email',$email);
+            return redirect()->route('index');
+        }else{
+            Session::put('ee','Email not Exist');
+            return redirect()->route('index');
+        }
+    }
+
+    public function newPass(Request $r){
+        $email =  $r->input('email');
+        $password = $r->input('password');
+        $new = array('password' => Hash::make($password));
+        $pass = User::where('email',$email)->update($new);
+        if($pass){
+            Session::flash('passUpdated','Password Updated Successfully!');
+            Session::forget('ee');
+            Session::forget('email');
+            return redirect()->route('index');
+        }else{
+            Session::flash('passUpdated','Password Change Request Fails!');
+            Session::forget('ee');
+            Session::forget('email');
+            return redirect()->route('index');
+        }
     }
 }
